@@ -9,8 +9,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 public class Main2Activity extends Activity {
 
@@ -35,8 +40,7 @@ public class Main2Activity extends Activity {
 		int id = item.getItemId();
 		if (id == R.id.reply_icon) {
 			mpBtn3.start();
-			Intent intent = new Intent(this,MainActivity.class);
-			startActivity(intent);
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
