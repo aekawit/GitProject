@@ -309,3 +309,20 @@ org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
 
 !ENTRY com.android.ide.eclipse.adt 4 0 2558-02-11 00:01:54.932
 !MESSAGE Failed to load properties file for project 'WSVProject'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2558-02-11 00:15:35.950
+!MESSAGE Failed to load properties file for project 'MainActivity'
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2558-02-11 00:16:20.174
+!MESSAGE error fixing classpath entries
+!STACK 1
+Java Model Exception: Java Model Status [MainActivity does not exist]
+	at org.eclipse.jdt.internal.core.JavaElement.newNotPresentException(JavaElement.java:498)
+	at org.eclipse.jdt.internal.core.JavaModelManager.getPerProjectInfoCheckExistence(JavaModelManager.java:2309)
+	at org.eclipse.jdt.internal.core.JavaProject.getPerProjectInfo(JavaProject.java:1908)
+	at org.eclipse.jdt.internal.core.JavaProject.getRawClasspath(JavaProject.java:1930)
+	at com.android.ide.eclipse.adt.internal.project.ProjectHelper.fixProjectClasspathEntries(ProjectHelper.java:314)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$1$1.run(Sdk.java:1169)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)
+!SUBENTRY 1 org.eclipse.jdt.core 4 969 2558-02-11 00:16:20.225
+!MESSAGE MainActivity does not exist
