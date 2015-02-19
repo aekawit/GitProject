@@ -23,7 +23,7 @@ public class Main2Activity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main2);
-		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -42,6 +42,8 @@ public class Main2Activity extends Activity {
 			mpBtn3.start();
 			finish();
 			return true;
+		}else if(id==android.R.id.home){
+			onBackPressed();
 		}
 		return super.onOptionsItemSelected(item);
 	}

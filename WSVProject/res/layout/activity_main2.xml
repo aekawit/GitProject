@@ -5,145 +5,157 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="0dp"
-    android:paddingRight="0dp" 
-    android:layout_marginTop="20dp"
-    android:layout_marginLeft="10dp">
-    
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginBottom="20dp">
+    android:paddingRight="0dp"
+    android:scrollbars="horizontal|vertical" >
 
-        <TextView
-            android:id="@+id/TextView05"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:text="คำสั่งทั้งหมด"
-            android:textSize="20dp"
-            android:textColorHighlight="@android:color/black"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="#F08080"
-        android:padding="5dp" >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/ImageView04"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/on" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="20dp"
+                android:padding="5dp" >
 
-        <TextView
-            android:id="@+id/TextView04"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:gravity="center|left"
-            android:text="สถานะ"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+                <ImageView
+                    android:id="@+id/ImageView04"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="35dp"
+                    android:src="@drawable/work_icon" />
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/TextView04"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center|left"
+                    android:text=": สถานะ"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="#F08080" 
-        android:padding="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp" >
 
-        <ImageView
-            android:id="@+id/ImageView03"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/light" />
+                <ImageView
+                    android:id="@+id/ImageView05"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="35dp"
+                    android:src="@drawable/service_icon" />
 
-        <TextView
-            android:id="@+id/TextView03"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:gravity="center|left"
-            android:text="เปิดไฟ /ปิดไฟ"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/TextView05"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center|left"
+                    android:text=": บริการ"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="#F08080" 
-        android:padding="5dp">
+                <ImageView
+                    android:id="@+id/ImageView03"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="35dp"
+                    android:src="@drawable/light" />
 
-        <ImageView
-            android:id="@+id/ImageView02"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/fan" />
+                <TextView
+                    android:id="@+id/TextView03"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center|left"
+                    android:text=": เปิดไฟ /ปิดไฟ"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/TextView02"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:gravity="center|left"
-            android:text="เปิดพัดลม /ปิดพัดลม"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp" >
 
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/ImageView02"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="35dp"
+                    android:src="@drawable/fan" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="#F08080" 
-        android:padding="5dp">
+                <TextView
+                    android:id="@+id/TextView02"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center|left"
+                    android:text=": เปิดพัดลม /ปิดพัดลม"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-        <ImageView
-            android:id="@+id/ImageView01"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/air" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp" >
 
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:gravity="center|left"
-            android:text="เปิดแอร์ /ปิดแอร์"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+                <ImageView
+                    android:id="@+id/ImageView01"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="35dp"
+                    android:src="@drawable/air_icon" />
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/TextView01"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center|left"
+                    android:text=": เปิดแอร์ /ปิดแอร์"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="#F08080" 
-        android:padding="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/tv" />
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="35dp"
+                    android:src="@drawable/tv_icon" />
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:gravity="center|left"
-            android:text="เปิดทีวี /ปิดทีวี"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center|left"
+                    android:text=": เปิดทีวี /ปิดทีวี"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

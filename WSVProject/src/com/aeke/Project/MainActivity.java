@@ -39,7 +39,7 @@ import android.content.pm.PackageManager;
 public class MainActivity extends Activity {
 
 	private final String NAMESPACE = "http://tempuri.org/";
-	private final String URL = "http://192.168.50.22:8080/webservice.asmx";
+	private final String URL = "http://192.168.10.125:8080/webservice.asmx";
 	private final String SOAP_ACTION = "http://tempuri.org/on";
 	private final String METHOD_NAME = "on";
 	private String TAG = "aeke";
@@ -51,65 +51,66 @@ public class MainActivity extends Activity {
 	private static boolean tv = false;
 	protected static final int RESULT_SPEECH = 1;
 	final static int INTENT_CHECK_TTS = 0;
-	final static String VAJA_TTS_ENGINE = "com.spt.tts.vaja";
 	final static String SVOX_TTS_ENGINE = "com.svox.classic";
 	TextToSpeech tts;
 	ImageButton btnSpeak;
 	TextView text_v;
-	
-	
-	@Override
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		checkTTSEngineInstalled(SVOX_TTS_ENGINE);
 		final MediaPlayer mpBtn = MediaPlayer.create(this, R.raw.buttonclickk);
-		
+
 		text_v = (TextView) findViewById(R.id.tv_result);
 		text_v.setText("กดปุ่ม เพื่อสั่งงาน");
 		btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
 		btnSpeak.setOnClickListener(new View.OnClickListener() {
-			
+
 			public void onClick(View v) {
 				text_v.setText("");
-				checkTTSEngineInstalled(SVOX_TTS_ENGINE);
 				mpBtn.start();
-				
-				
-				Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+				Intent intent = new Intent(
+						RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "th");
 				try {
 					startActivityForResult(intent, RESULT_SPEECH);
-					
+
 				} catch (ActivityNotFoundException a) {
-					Toast t = Toast.makeText(getApplicationContext(),"ผิดพลาด ! เครื่องของคุณยังไม่ได้ติดตั้ง โปรแกรมเสียงเป็นข้อความ",
-					Toast.LENGTH_SHORT);
+					Toast t = Toast
+							.makeText(
+									getApplicationContext(),
+									"ผิดพลาด ! เครื่องของคุณยังไม่ได้ติดตั้ง โปรแกรมเสียงเป็นข้อความ",
+									Toast.LENGTH_SHORT);
 					t.show();
 				}
 			}
 		});
 
 	}
-	
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater mif = getMenuInflater();
 		mif.inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu); 
-    }
-	
+		return super.onCreateOptionsMenu(menu);
+	}
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		final MediaPlayer mpBtn3 = MediaPlayer.create(this, R.raw.buttonclickk);
 		int id = item.getItemId();
 		if (id == R.id.search_icon) {
 			mpBtn3.start();
-			Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
+			text_v.setText("กดปุ่ม เพื่อสั่งงาน");
+			Intent intent = new Intent(getApplicationContext(),
+					Main2Activity.class);
 			startActivity(intent);
 			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
+		
 	}
-	
 
 	public void checkTTSEngineInstalled(String packageName) {
 		boolean isSvoxInstalled = isAppInstalled(packageName);
@@ -117,7 +118,8 @@ public class MainActivity extends Activity {
 			if (tts == null)
 				tts = new TextToSpeech(MainActivity.this, null, packageName);
 		} else if (!isSvoxInstalled) {
-			Toast.makeText(getApplicationContext(),"กรุณาติดตั้ง SVOX Text-to-Speech Engine",
+			Toast.makeText(getApplicationContext(),
+					"กรุณาติดตั้ง SVOX Text-to-Speech Engine",
 					Toast.LENGTH_LONG).show();
 			Intent svoxIntent = new Intent(Intent.ACTION_VIEW);
 			svoxIntent.setData(Uri.parse("market://details?id=" + packageName));
@@ -139,18 +141,18 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-
-		
-		
 		switch (requestCode) {
 		case RESULT_SPEECH: {
 			if (resultCode == RESULT_OK && null != data) {
-				ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+				ArrayList<String> text = data
+						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 				text_v.setText(text.get(0).trim());
 			}
-			if (text_v.getText().length() != 0 && text_v.getText().toString() != "") {
+			if (text_v.getText().length() != 0
+					&& text_v.getText().toString() != "") {
 				TextRequest = text_v.getText().toString().trim();
-				Toast toast = Toast.makeText(this, TextRequest,Toast.LENGTH_LONG);
+				Toast toast = Toast.makeText(this, TextRequest,
+						Toast.LENGTH_LONG);
 				toast.show();
 
 				AsyncCallWS task = new AsyncCallWS();
@@ -162,11 +164,9 @@ public class MainActivity extends Activity {
 			break;
 		}
 		}
-			
+
 	}
 
-	
-	
 	private class AsyncCallWS extends AsyncTask<String, Void, Void> {
 		@Override
 		protected Void doInBackground(String... params) {
@@ -179,7 +179,7 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			Log.i(TAG, "onPostExecute");
 			text_v.setText(TextResponse);
-			
+
 			String str = TextResponse;
 			tts.speak(str, TextToSpeech.QUEUE_FLUSH, null);
 		}
@@ -187,7 +187,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			Log.i(TAG, "onPreExecute");
-			text_v.setText("กำลังคำนวณผล...");
+			text_v.setText("กำลังประมวลผล...");
 		}
 
 		@Override
@@ -204,9 +204,9 @@ public class MainActivity extends Activity {
 
 	public boolean checkStatus(String Voice) {
 
-		if (Voice.equals("เปิดไฟ") && !light) { // !light = light=false
+		if (Voice.equals("on") && !light) { // !light = light=false
 			return true;
-		} else if (Voice.equals("ปิดไฟ") && light) {
+		} else if (Voice.equals("off") && light) {
 			return true;
 		} else if (Voice.equals("เปิดพัดลม") && !fan) {
 			return true;
@@ -220,14 +220,13 @@ public class MainActivity extends Activity {
 			return true;
 		} else if (Voice.equals("ปิดแอร์") && air) {
 			return true;
-		}else if (Voice.equals("ปิดทั้งหมด")) {
+		} else if (Voice.equals("ปิดทั้งหมด")) {
 			light = false;
 			fan = false;
 			tv = false;
 			air = false;
 			return false;
-		}	
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -236,23 +235,37 @@ public class MainActivity extends Activity {
 		if (TextRequest.trim().equals("สถานะ".trim())) {
 			TextResponse = "";
 			if (light == true) {
-				TextResponse += "ไฟ กำลังทำงาน ";
+				TextResponse += "ไฟ กำลังทำงาน " +System.getProperty("line.separator");
 			}
 			if (fan == true) {
-				TextResponse += "พัดลม กำลังทำงาน ";
+				TextResponse += "พัดลม กำลังทำงาน " +System.getProperty("line.separator");
 			}
 			if (air == true) {
-				TextResponse += "แอร์ กำลังทำงาน ";
+				TextResponse += "แอร์ กำลังทำงาน " +System.getProperty("line.separator");
 			}
 			if (tv == true) {
-				TextResponse += "ทีวี กำลังทำงาน ";
+				TextResponse += "ทีวี กำลังทำงาน " +System.getProperty("line.separator");
 			}
 
 			if (light == false && fan == false && air == false && tv == false) {
-				TextResponse = "ขณะนี้ ยังไม่มีการทำงาน";
+				TextResponse = "ขณะนี้ ยังไม่มีการทำงาน " +System.getProperty("line.separator")
+						+ "คุณสามารถ กดปุ่มและใส่คำสั่งได้ในขณะนี้ " +System.getProperty("line.separator")
+						+ "หรือต้องการค้นหาบริการที่มี " +System.getProperty("line.separator")
+						+ "ให้กดปุ่ม และพูดว่า บริการ";
 			}
-		} else {
+		} else if (TextRequest.trim().equals("บริการ".trim())) {
+			TextResponse = "บริการที่มีอยู่ขณะนี้คือบริการไฟ"  +System.getProperty("line.separator")
+					+ "บริการแอร์ บริการพัดลม บริการทีวี" +System.getProperty("line.separator")
+					+ "เมื่อคุณต้องการใช้งานบริการเหล่านี้" +System.getProperty("line.separator")
+					+ "ให้พูดคำว่า    เปิด   แล้วตามด้วยชื่อบริการนั้น" +System.getProperty("line.separator")
+					+ "ส่วนเมื่อคุณต้องการปิดการใช้งานบริการ" +System.getProperty("line.separator")
+					+ "ให้พูดคำว่า    ปิด    แล้วตามด้วยชื่อบริการนั้น" +System.getProperty("line.separator")
+					+ "และเมื่อคุณต้องการตรวจสอบสถานะ การทำงาน " +System.getProperty("line.separator")
+					+ "ให้พูดคำว่า สถานะ"; 
 
+		}
+
+		else {
 			if (checkStatus(TextRequest)) {
 				SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 				PropertyInfo TextRequestPI = new PropertyInfo();
@@ -308,19 +321,19 @@ public class MainActivity extends Activity {
 						|| TextRequest.trim().equals("เปิดพัดลม".trim())
 						|| TextRequest.trim().equals("เปิดแอร์".trim())
 						|| TextRequest.trim().equals("เปิดทีวี".trim())) {
-					TextResponse = "อุปกรณ์ที่คุณสั่ง ทำงานอยู่แล้ว";
-					
+					TextResponse = "อุปกรณ์ที่คุณสั่ง ทำงานอยู่แล้ว คุณสามารถตรวจสอบสถานะได้ด้วยการ กดปุ่ม และพูดว่า สถานะ";
+
 				} else if (TextRequest.trim().equals("ปิดไฟ".trim())
 						|| TextRequest.trim().equals("ปิดพัดลม".trim())
 						|| TextRequest.trim().equals("ปิดแอร์".trim())
 						|| TextRequest.trim().equals("ปิดทีวี".trim())) {
-					TextResponse = "สถานะ ยังไม่ทำงาน ";
-					
-				}else if (TextRequest.trim().equals("ปิดทั้งหมด".trim())){
+					TextResponse = "บริการที่คุณสั่ง ยังไม่มีการทำงาน  ลองใหม่อีกครั้ง หรือตรวจสอบสถานะการทำงาน กดปุ่มและพูดว่า สถานะ";
+
+				} else if (TextRequest.trim().equals("ปิดทั้งหมด".trim())) {
 					TextResponse = "ปิด การทำงานทั้งหมดแล้ว";
-					
+
 				} else {
-					TextResponse = "คุณใส่คำสั่งไม่ถูกต้อง ลองใหม่อีกครั้ง";
+					TextResponse = "คุณใส่คำสั่งไม่ถูกต้อง ลองใหม่อีกครั้ง หรือต้องการค้นหาบริการที่มี ให้กดปุ่ม และพูดว่า  บริการ";
 				}
 			}
 
