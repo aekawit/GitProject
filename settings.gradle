@@ -1,0 +1,2 @@
+include ':xmlparser'
+include ':appcompat_v7'

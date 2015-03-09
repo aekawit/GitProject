@@ -1,5 +1,6 @@
 package com.aeke.Project;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -13,6 +14,8 @@ import org.ksoap2.transport.HttpTransportSE;
 import com.example.mainapp.R;
 import com.example.mainapp.R.menu;
 
+import android.R.bool;
+import android.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -29,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,24 +42,22 @@ import android.content.pm.PackageManager;
 
 public class MainActivity extends Activity {
 
-	private final String NAMESPACE = "http://tempuri.org/";
-	private final String URL = "http://192.168.10.125:8080/webservice.asmx";
-	private final String SOAP_ACTION = "http://tempuri.org/on";
-	private final String METHOD_NAME = "on";
-	private String TAG = "aeke";
-	private static String TextRequest;
-	private static String TextResponse;
-	private static boolean light = false;
-	private static boolean fan = false;
-	private static boolean air = false;
-	private static boolean tv = false;
+	String NAMESPACE = "http://tempuri.org/";
+	String URL = "http://192.168.1.175:8080/webservice.asmx";
+	String SOAP_ACTION = "http://tempuri.org/on";
+	String METHOD_NAME = "on";
+	String TAG = "aeke";
+	String TextRequest = "TextRequest";
+	String TextResponse = "TextResponse";
 	protected static final int RESULT_SPEECH = 1;
 	final static int INTENT_CHECK_TTS = 0;
 	final static String SVOX_TTS_ENGINE = "com.svox.classic";
 	TextToSpeech tts;
 	ImageButton btnSpeak;
-	TextView text_v;
-
+	//TextView text_v;
+	EditText text_v;
+	
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -63,8 +65,8 @@ public class MainActivity extends Activity {
 		checkTTSEngineInstalled(SVOX_TTS_ENGINE);
 		final MediaPlayer mpBtn = MediaPlayer.create(this, R.raw.buttonclickk);
 
-		text_v = (TextView) findViewById(R.id.tv_result);
-		text_v.setText("กดปุ่ม เพื่อสั่งงาน");
+		text_v = (EditText) findViewById(R.id.tv_result);
+		text_v.setText("แตะไมค์ เมื่อต้องการสั่งงาน");
 		btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
 		btnSpeak.setOnClickListener(new View.OnClickListener() {
 
@@ -101,15 +103,14 @@ public class MainActivity extends Activity {
 		int id = item.getItemId();
 		if (id == R.id.search_icon) {
 			mpBtn3.start();
-			text_v.setText("กดปุ่ม เพื่อสั่งงาน");
 			Intent intent = new Intent(getApplicationContext(),
 					Main2Activity.class);
 			startActivity(intent);
 			return true;
 		}
-		
+
 		return super.onOptionsItemSelected(item);
-		
+
 	}
 
 	public void checkTTSEngineInstalled(String packageName) {
@@ -201,144 +202,29 @@ public class MainActivity extends Activity {
 		if (tts != null)
 			tts.shutdown();
 	}
+	public void getTextResponse(String TextRequest1) {
+		
+		SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+		PropertyInfo TextRequestPI = new PropertyInfo();
+		TextRequestPI.setName("TextRequest");
+		TextRequestPI.setValue(TextRequest1);
+		TextRequestPI.setType(double.class);
+		request.addProperty(TextRequestPI);
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+				SoapEnvelope.VER11);
+		envelope.dotNet = true;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
 
-	public boolean checkStatus(String Voice) {
-
-		if (Voice.equals("on") && !light) { // !light = light=false
-			return true;
-		} else if (Voice.equals("off") && light) {
-			return true;
-		} else if (Voice.equals("เปิดพัดลม") && !fan) {
-			return true;
-		} else if (Voice.equals("ปิดพัดลม") && fan) {
-			return true;
-		} else if (Voice.equals("เปิดทีวี") && !tv) {
-			return true;
-		} else if (Voice.equals("ปิดทีวี") && tv) {
-			return true;
-		} else if (Voice.equals("เปิดแอร์") && !air) {
-			return true;
-		} else if (Voice.equals("ปิดแอร์") && air) {
-			return true;
-		} else if (Voice.equals("ปิดทั้งหมด")) {
-			light = false;
-			fan = false;
-			tv = false;
-			air = false;
-			return false;
-		} else {
-			return false;
+		try {
+			androidHttpTransport.call(SOAP_ACTION, envelope);
+			SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+			TextResponse = response.toString();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	}
-
-	public void getTextResponse(String TextRequest) {
-		if (TextRequest.trim().equals("สถานะ".trim())) {
-			TextResponse = "";
-			if (light == true) {
-				TextResponse += "ไฟ กำลังทำงาน " +System.getProperty("line.separator");
-			}
-			if (fan == true) {
-				TextResponse += "พัดลม กำลังทำงาน " +System.getProperty("line.separator");
-			}
-			if (air == true) {
-				TextResponse += "แอร์ กำลังทำงาน " +System.getProperty("line.separator");
-			}
-			if (tv == true) {
-				TextResponse += "ทีวี กำลังทำงาน " +System.getProperty("line.separator");
-			}
-
-			if (light == false && fan == false && air == false && tv == false) {
-				TextResponse = "ขณะนี้ ยังไม่มีการทำงาน " +System.getProperty("line.separator")
-						+ "คุณสามารถ กดปุ่มและใส่คำสั่งได้ในขณะนี้ " +System.getProperty("line.separator")
-						+ "หรือต้องการค้นหาบริการที่มี " +System.getProperty("line.separator")
-						+ "ให้กดปุ่ม และพูดว่า บริการ";
-			}
-		} else if (TextRequest.trim().equals("บริการ".trim())) {
-			TextResponse = "บริการที่มีอยู่ขณะนี้คือบริการไฟ"  +System.getProperty("line.separator")
-					+ "บริการแอร์ บริการพัดลม บริการทีวี" +System.getProperty("line.separator")
-					+ "เมื่อคุณต้องการใช้งานบริการเหล่านี้" +System.getProperty("line.separator")
-					+ "ให้พูดคำว่า    เปิด   แล้วตามด้วยชื่อบริการนั้น" +System.getProperty("line.separator")
-					+ "ส่วนเมื่อคุณต้องการปิดการใช้งานบริการ" +System.getProperty("line.separator")
-					+ "ให้พูดคำว่า    ปิด    แล้วตามด้วยชื่อบริการนั้น" +System.getProperty("line.separator")
-					+ "และเมื่อคุณต้องการตรวจสอบสถานะ การทำงาน " +System.getProperty("line.separator")
-					+ "ให้พูดคำว่า สถานะ"; 
-
-		}
-
-		else {
-			if (checkStatus(TextRequest)) {
-				SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-				PropertyInfo TextRequestPI = new PropertyInfo();
-				TextRequestPI.setName("TextRequest");
-				TextRequestPI.setValue(TextRequest);
-				TextRequestPI.setType(double.class);
-				request.addProperty(TextRequestPI);
-				SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-						SoapEnvelope.VER11);
-				envelope.dotNet = true;
-				envelope.setOutputSoapObject(request);
-				HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-				try {
-					androidHttpTransport.call(SOAP_ACTION, envelope);
-					SoapPrimitive response = (SoapPrimitive) envelope
-							.getResponse();
-					TextResponse = response.toString();
-
-					if (TextResponse.trim().equals("L1".trim())) {
-						TextResponse = "คุณทำการ เปิดไฟ ได้สำเร็จ";
-						light = true;
-					} else if (TextResponse.trim().equals("L0".trim())) {
-						TextResponse = "คุณทำการ ปิดไฟ ได้สำเร็จ";
-						light = false;
-					} else if (TextResponse.trim().equals("F1".trim())) {
-						TextResponse = "คุณทำการ เปิดพัดลม ได้สำเร็จ";
-						fan = true;
-					} else if (TextResponse.trim().equals("F0".trim())) {
-						TextResponse = "คุณทำการ ปิดพัดลม ได้สำเร็จ";
-						fan = false;
-					} else if (TextResponse.trim().equals("A1".trim())) {
-						TextResponse = "คุณทำการ เปิดแอร์ ได้สำเร็จ";
-						air = true;
-					} else if (TextResponse.trim().equals("A0".trim())) {
-						TextResponse = "คุณทำการ ปิดแอร์ ได้สำเร็จ";
-						air = false;
-					} else if (TextResponse.trim().equals("T1".trim())) {
-						TextResponse = "คุณทำการ เปิดทีวี ได้สำเร็จ";
-						tv = true;
-					} else if (TextResponse.trim().equals("T0".trim())) {
-						TextResponse = "คุณทำการ ปิดทีวี ได้สำเร็จ";
-						tv = false;
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			else {
-				if (TextRequest.trim().equals("เปิดไฟ".trim())
-						|| TextRequest.trim().equals("เปิดพัดลม".trim())
-						|| TextRequest.trim().equals("เปิดแอร์".trim())
-						|| TextRequest.trim().equals("เปิดทีวี".trim())) {
-					TextResponse = "อุปกรณ์ที่คุณสั่ง ทำงานอยู่แล้ว คุณสามารถตรวจสอบสถานะได้ด้วยการ กดปุ่ม และพูดว่า สถานะ";
-
-				} else if (TextRequest.trim().equals("ปิดไฟ".trim())
-						|| TextRequest.trim().equals("ปิดพัดลม".trim())
-						|| TextRequest.trim().equals("ปิดแอร์".trim())
-						|| TextRequest.trim().equals("ปิดทีวี".trim())) {
-					TextResponse = "บริการที่คุณสั่ง ยังไม่มีการทำงาน  ลองใหม่อีกครั้ง หรือตรวจสอบสถานะการทำงาน กดปุ่มและพูดว่า สถานะ";
-
-				} else if (TextRequest.trim().equals("ปิดทั้งหมด".trim())) {
-					TextResponse = "ปิด การทำงานทั้งหมดแล้ว";
-
-				} else {
-					TextResponse = "คุณใส่คำสั่งไม่ถูกต้อง ลองใหม่อีกครั้ง หรือต้องการค้นหาบริการที่มี ให้กดปุ่ม และพูดว่า  บริการ";
-				}
-			}
-
-		}
-
+		
 	}
 
 }

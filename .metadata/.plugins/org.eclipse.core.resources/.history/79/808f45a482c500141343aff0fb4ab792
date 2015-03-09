@@ -1,0 +1,185 @@
+package com.example.xmlparser;
+
+import java.io.IOException;
+import java.security.PublicKey;
+import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+
+	private String url1 = "http://www.umr-lab.com/device.xml";
+	private EditText location, country, temperature, humidity, pressure;
+	private EditText Namespace, URLL, Soap_action, Method_name, Var;
+	private HandleXML obj;
+	private ArrayList<String> listt = new ArrayList<String>();
+	private ArrayList<String> listSer = new ArrayList<String>();
+	
+	
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		location = (EditText) findViewById(R.id.editText1);
+		country = (EditText) findViewById(R.id.editText2);
+		temperature = (EditText) findViewById(R.id.editText3);
+		
+		pressure = (EditText) findViewById(R.id.editText5);
+		
+		Var = (EditText) findViewById(R.id.editText4);
+		Namespace = (EditText) findViewById(R.id.EditText01);
+		URLL = (EditText) findViewById(R.id.EditText02);
+		Soap_action = (EditText) findViewById(R.id.EditText03);
+		Method_name = (EditText) findViewById(R.id.EditText04);
+		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	public void open(View view) {
+		String a = "";
+		String b ="";
+		String finalUrl = url1;
+		obj = new HandleXML(finalUrl);
+		obj.fetchXML();
+		
+		
+		ArrayList<String> list = obj.getAllWebService();
+		ArrayList<String> listSername = obj.getServiceName();
+		ArrayList<String> listNamespace = obj.getlistNamespace();
+		ArrayList<String> listURL = obj.getlistURL();
+		ArrayList<String> listMethod = obj.getlistMethod();
+		
+		
+		
+		
+		
+		while (obj.parsingComplete);
+		if (location.getText().toString().trim().equals("1")) {
+			country.setText(list.toString());
+			location.setText("");
+			Toast toast = Toast.makeText(this, "บริการที่มีทั้งหมด", Toast.LENGTH_SHORT);
+			toast.show();
+				 
+		} 
+		else if(location.getText().toString().trim().equals("2")){
+			
+			temperature.setText(listSername.toString());
+			location.setText("");
+			Toast toast = Toast.makeText(this, "เปิดใช้บริการ ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else if(location.getText().toString().trim().equals(list.get(0).trim())){ 	// Array 1
+			
+			country.setText(list.get(0).toString());
+			temperature.setText(listSername.get(0).toString());
+			humidity.setText(listURL.get(0).toString());
+			pressure.setText(listMethod.get(0).toString());
+			
+			location.setText("");
+			Toast toast = Toast.makeText(this, "เปิดใช้บริการ ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else if(location.getText().toString().trim().equals(list.get(1).trim())){	// Array 2
+			
+			country.setText(list.get(1).toString());
+			temperature.setText(listSername.get(1).toString());
+			
+			location.setText("");
+			Toast toast = Toast.makeText(this, "เปิดใช้บริการ ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else if(location.getText().toString().trim().equals(list.get(2).trim())){	// Array 3
+			
+			country.setText(list.get(2).toString());
+			temperature.setText(listSername.get(2).toString());
+			
+			location.setText("");
+			Toast toast = Toast.makeText(this, "เปิดใช้บริการ ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else if(location.getText().toString().trim().equals(list.get(3).trim())){	// Array 4
+			
+			country.setText(list.get(3).toString());
+			temperature.setText(listSername.get(3).toString());
+			
+			location.setText("");
+			Toast toast = Toast.makeText(this, "เปิดใช้บริการ ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else if(location.getText().toString().trim().equals(list.get(4).trim())){	// Array 5
+			
+			country.setText(list.get(4).toString());
+			temperature.setText(listSername.get(4).toString());
+			
+			location.setText("");
+			Toast toast = Toast.makeText(this, "เปิดใช้บริการ ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else if(location.getText().toString().trim().equals(list.get(5).trim())){	// Array 6
+			
+			country.setText(list.get(5).toString());
+			temperature.setText(listSername.get(5).toString());
+			
+			location.setText("");
+			Toast toast = Toast.makeText(this, "เปิดใช้บริการ ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else if(location.getText().toString().trim().equals("0".trim())){
+			location.setText("");
+			country.setText("");
+			temperature.setText("");
+			humidity.setText("");
+			pressure.setText("");
+			Toast toast = Toast.makeText(this, "เครียค่าทั้งหมด ", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else {
+			location.setText("");
+			Toast toast = Toast.makeText(this, "ไม่มีคำสั่งนี้", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+
+	}
+
+}
+
+
+/*
+a += list.get(i).toString()+"-";*/
+
+/*
+String[] parts = a.split("-");
+
+part1 = parts[0];
+part2 = parts[1];
+part3 = parts[2];
+part4 = parts[3];
+part5 = parts[4];
+part6 = parts[5];*/
+
+
+/*
+
+for (int i = 0; i < list.size(); i++) {
+	a += list.get(i)+ System.getProperty("line.separator");
+	list2.add(list.get(i).trim());
+}*/
