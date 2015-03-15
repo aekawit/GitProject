@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<employee>
+    <name>Kumar</name>
+    <salary>30000.0</salary>
+    <designation>Junior Developer</designation>
+</employee>

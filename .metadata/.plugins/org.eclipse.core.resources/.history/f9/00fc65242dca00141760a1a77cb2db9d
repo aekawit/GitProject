@@ -1,0 +1,120 @@
+package com.androidpeople.xml.parsing;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class XMLParsingDOMExample extends Activity {
+
+	String a = "";
+	ArrayList AllWebService;
+	HashMap<String, Object> hm;
+	ListView list;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+		/** Create a new layout to display the view */
+		LinearLayout layout = new LinearLayout(this);
+		layout.setOrientation(1);
+		list=(ListView)findViewById(R.id.gridView1);
+		AllWebService = new ArrayList<HashMap<String, Object>>();
+		/** Create a new textview array to display the results */
+/*		TextView name[];
+		TextView name2[];
+		TextView website[];
+		TextView category[];*/
+
+		try {
+
+			URL url = new URL("http://www.umr-lab.com/device.xml");
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new InputSource(url.openStream()));
+			doc.getDocumentElement().normalize();
+
+			
+			NodeList nodeList = doc.getElementsByTagName("device");
+
+			for (int i = 0; i < nodeList.getLength(); i++) {
+
+				Node node = nodeList.item(i);
+
+				    NodeList children = node.getChildNodes();
+				    for (int j = 1; j <= children.getLength(); j++) {
+				        Node textChild = children.item(j);
+				        if (textChild.getNodeType() != Node.TEXT_NODE) {
+				        	Log.d("Val",textChild.getNodeName());
+				            continue;
+				        }
+				    }
+
+				/*hm=new HashMap<String, Object>();
+
+				Element fstElmnt = (Element) node;
+				for(int j=0;j<fstElmnt.getChildNodes().getLength();j++){
+					NodeList nameList = fstElmnt.getElementsByTagName(fstElmnt.getNodeName());
+					   Element nameElement = (Element) nameList.item(0);
+					   NodeList	nameList2 = nameElement.getChildNodes();
+						//hm.put(fstElmnt.getNodeName(),((Node) nameList.item(0)).getNodeValue().toString());
+						//for(int k=0;k<nameList.getLength();k++){
+							Log.d("Value",nameList2.item(0).getNodeName());
+						//}
+
+					//AllWebService.add(hm);
+					
+				}				*/
+
+			}
+
+/*			String[] from=new String[]{
+				"deviceName",
+				"serviceName",
+				"functionName"
+			};
+			
+			int[] to=new int[]{
+					R.id.name,
+					R.id.servicelist,
+					R.id.Var
+			};
+			
+			int id=R.layout.xml_list;
+			SimpleAdapter adap=new SimpleAdapter(this, AllWebService, id, from, to);
+			list.setAdapter(adap);*/
+			
+/*			Toast toast = Toast.makeText(this, AllWebService.toString(), Toast.LENGTH_LONG);
+			toast.show();
+			*/
+			
+		} catch (Exception e) {
+			System.out.println("XML Pasing Excpetion = " + e);
+		}
+
+		/** Set the layout view to display */
+//		setContentView(layout);
+	
+
+	}
+}
