@@ -2,6 +2,7 @@ package com.aeke.Project;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import org.ksoap2.SoapEnvelope;
@@ -31,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,18 +44,19 @@ import android.content.pm.PackageManager;
 
 public class MainActivity extends Activity {
 
-	String NAMESPACE = "http://tempuri.org/";
-	String URL = "http://192.168.1.175:8080/webservice.asmx";
-	String SOAP_ACTION = "http://tempuri.org/on";
-	String METHOD_NAME = "on";
+	String NAMESPACE = "http://www.pttplc.com/ptt_webservice/";
+	String URL = "http://www.pttplc.com/webservice/pttinfo.asmx";
+	String SOAP_ACTION = "http://www.pttplc.com/ptt_webservice/GetOilPrice";
+	String METHOD_NAME = "GetOilPrice";
 	String TAG = "aeke";
-	String TextRequest = "TextRequest";
+	String[] aString,attrVal;
 	String TextResponse = "TextResponse";
 	protected static final int RESULT_SPEECH = 1;
 	final static int INTENT_CHECK_TTS = 0;
 	final static String SVOX_TTS_ENGINE = "com.svox.classic";
 	TextToSpeech tts;
 	ImageButton btnSpeak;
+	Button btn;
 	//TextView text_v;
 	EditText text_v;
 	
@@ -64,7 +67,31 @@ public class MainActivity extends Activity {
 
 		checkTTSEngineInstalled(SVOX_TTS_ENGINE);
 		final MediaPlayer mpBtn = MediaPlayer.create(this, R.raw.buttonclickk);
-
+		
+		btn = (Button) findViewById(R.id.button1);
+		btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				EditText editText1 = (EditText) findViewById(R.id.editText1);
+				
+				aString = editText1.getText().toString().trim().split(",");
+				attrVal = new String[]{
+						"Language",
+						"DD",
+						"MM",
+						"YYYY"
+				};
+				HashMap<String, Object> hm = new HashMap<>();
+				for(int i=0;i<attrVal.length;i++){
+					hm.put(attrVal[i],aString[i]);
+				}
+				AsyncCallWS task = new AsyncCallWS();
+				task.execute(hm);
+			}
+		});
+		
+		
 		text_v = (EditText) findViewById(R.id.tv_result);
 		text_v.setText("แตะไมค์ เมื่อต้องการสั่งงาน");
 		btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
@@ -151,13 +178,14 @@ public class MainActivity extends Activity {
 			}
 			if (text_v.getText().length() != 0
 					&& text_v.getText().toString() != "") {
-				TextRequest = text_v.getText().toString().trim();
-				Toast toast = Toast.makeText(this, TextRequest,
+				
+/*				aString = text_v.getText().toString().trim();
+				Toast toast = Toast.makeText(this, aString,
 						Toast.LENGTH_LONG);
-				toast.show();
+				toast.show();*/
 
 				AsyncCallWS task = new AsyncCallWS();
-				task.execute();
+
 			} else {
 
 				text_v.setText("คุณยังไม่ได้ใส่คำสั่ง กรุณาใส่คำสั่ง");
@@ -168,13 +196,8 @@ public class MainActivity extends Activity {
 
 	}
 
-	private class AsyncCallWS extends AsyncTask<String, Void, Void> {
-		@Override
-		protected Void doInBackground(String... params) {
-			Log.i(TAG, "doInBackground");
-			getTextResponse(TextRequest);
-			return null;
-		}
+	private class AsyncCallWS extends AsyncTask<HashMap<String,Object>, Void, Void> {
+
 
 		@Override
 		protected void onPostExecute(Void result) {
@@ -195,6 +218,13 @@ public class MainActivity extends Activity {
 		protected void onProgressUpdate(Void... values) {
 			Log.i(TAG, "onProgressUpdate");
 		}
+
+		@Override
+		protected Void doInBackground(HashMap<String, Object>... params) {
+			
+			getTextResponse(params[0]);
+			return null;
+		}
 	}
 
 	public void onDestroy() {
@@ -202,14 +232,23 @@ public class MainActivity extends Activity {
 		if (tts != null)
 			tts.shutdown();
 	}
-	public void getTextResponse(String TextRequest1) {
+
+	public void getTextResponse(HashMap<String,Object> attr) {
 		
 		SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-		PropertyInfo TextRequestPI = new PropertyInfo();
-		TextRequestPI.setName("TextRequest");
+		
+/*		PropertyInfo TextRequestPI = new PropertyInfo();
+		TextRequestPI.setName("Celsius");
 		TextRequestPI.setValue(TextRequest1);
 		TextRequestPI.setType(double.class);
-		request.addProperty(TextRequestPI);
+		
+		request.addProperty(TextRequestPI);*/
+
+    	for(String kString : attr.keySet()){
+   		request.addProperty(kString,attr.get(kString));
+    	}
+    	  
+
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
 				SoapEnvelope.VER11);
 		envelope.dotNet = true;
