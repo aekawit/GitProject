@@ -1,0 +1,9 @@
+package com.aeke.Project;
+
+import android.widget.Toast;
+
+public class Currency {
+	public void GetCurr(String Text){
+		
+	}
+}

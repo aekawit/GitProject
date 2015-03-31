@@ -12,15 +12,20 @@
 		<link>
 			<name>.link0</name>
 			<type>2</type>
-			<location>C:/Program Files (x86)/Android/android-sdk/sources/android-14</location>
+			<location>C:/Program Files (x86)/Android/android-sdk/sources/android-21</location>
 		</link>
 		<link>
 			<name>.link1</name>
 			<type>2</type>
-			<location>C:/Program Files (x86)/Android/android-sdk/sources/android-21</location>
+			<location>C:/Program Files (x86)/Android/android-sdk/sources/android-19</location>
 		</link>
 		<link>
 			<name>.link2</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Android/android-sdk/sources/android-14</location>
+		</link>
+		<link>
+			<name>.link3</name>
 			<type>2</type>
 			<location>C:/Program Files (x86)/Android/android-sdk/sources/android-20</location>
 		</link>

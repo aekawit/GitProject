@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<food>
+<item>
+<name>French Toast</name>
+<price>$4.50</price>
+</item>
+<item>
+<name>Strawberry Belgian Waffles</name>
+<price>$7.95</price>
+</item>
+<item>
+<name>Berry-Berry Belgian Waffles</name>
+<price>$8.95</price>
+</item>
+</food>

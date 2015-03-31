@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-
+	
 	private ArrayList<String> listVar,listURL;
 	private String url1 = "https://cfe132ba205f9ee267410edcbcb01ddc5eeeed6d.googledrive.com/host/"
 			+ "0B1Pubw_66OGsfjdhUTJDNEJ5czNjOGF2VFJBcXQyTnJ1WVlISkpTSWNSN2drWW54N00wX1U/device.xml";
@@ -54,7 +54,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void open(View view) {
-		
 		
 		String finalUrl = url1;
 		obj = new HandleXML(finalUrl);

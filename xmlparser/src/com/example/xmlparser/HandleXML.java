@@ -34,7 +34,6 @@ public class HandleXML {
 	private XmlPullParserFactory xmlFactoryObject;
 	public volatile boolean parsingComplete = true;
 	
-	
 	private ArrayList<String> AllWebService = new ArrayList<String>();
 	private ArrayList<String> listNamespace = new ArrayList<String>();
 	private ArrayList<String> listURL = new ArrayList<String>();

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Celsius to Farenheit"
+        android:text="โปรแกรมสั่งงานด้วยเสียง"
         android:textSize="30dp" />
 
     <EditText
@@ -18,7 +18,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:numeric="integer"
         android:singleLine="true" />
 
     <Button
@@ -27,13 +26,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:text="Convert to Farenheit" />
-
-    <TextView
+        android:text="ค้นหา" />
+	<ScrollView 
+	    android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <TextView
         android:id="@+id/tv_result"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="" android:textSize="26dp"/>
+        android:text="" android:textSize="18dp"/>
+        
+	</ScrollView>
+    
 
 </LinearLayout>
