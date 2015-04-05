@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 	private static String TextResponse = "";
 	private int Status,StatusService = 0;
 	private String NAMESPACE,URL2,SOAP_ACTION,METHOD_NAME,Att;
-	private String Txt,Name,Name2 = "";
+	private String Txt,Name,Name2,Infor = "";
 	Button b;
 	NodeList nodelist;
 	TextView text_v;
@@ -118,7 +118,29 @@ public class MainActivity extends Activity {
 		}
 		return app_installed;
 	}
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater mif = getMenuInflater();
+		mif.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	public boolean onOptionsItemSelected(MenuItem item) {
+		//final MediaPlayer mpBtn3 = MediaPlayer.create(this, R.raw.buttonclickk);
+		int id = item.getItemId();
+		if (id == R.id.search_icon) {
+			//mpBtn3.start();
+			Txt = "สวัสดีค่ะ ยินดีต้อนรับเข้าสู่โปรแกรมสั่งงานด้วยเสียง คำสั่งการเรียกใช้งานบริการทั้งหมดมีดังต่อไปนี้ "
+					+"\n"+"ต้องการค้นหาบริการ ให้พูดว่า ค้นหา"
+					+"\n"+"ต้องการใช้งานบริการ ให้พูดชื่อบริการนั้นๆ"
+					+"\n"+"ต้องการตรวจสอบสถานะการทำงาน ให้พูดว่า สถานะ"
+					+"\n"+"ต้องการกลับเมนูหลัก ให้พูดว่า เมนูหลัก";
+			text_v.setText(Txt);
+			tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
+			return true;
+		}
 
+		return super.onOptionsItemSelected(item);
+
+	}
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
@@ -142,14 +164,14 @@ public class MainActivity extends Activity {
 					else{
 						Status = 0;
 						text_v.setText("");
-						Txt = "กลับสู่เมนูหลักได้สำเร็จ "+ "\n";
+						Txt = "กลับสู่เมนูหลักได้สำเร็จ";
 						text_v.setText(Txt);
 						tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
 					}
 				}
 				else if (TextRequest.equals("สถานะ")){
 					if(Status == 1){
-						Txt = "สถานะที่เรียกใช้รขณะนี้คือ "+Name.toString().trim();
+						Txt = "บริการที่เรียกใช้อยู่ขณะนี้คือ  "+ Name + "\n" + Infor;
 					}
 					else{
 						Txt = "ขณะนี้ยังไม่มีการเรียกใช้งานบริการ";
@@ -157,13 +179,16 @@ public class MainActivity extends Activity {
 					text_v.setText(Txt);
 					tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
 				}
-				else if(Status == 1){ //ตรวจสอบดึงค่าแล้วหรือยัง
+				else if(Status == 1){ //การเรียกใช้การแปลงสกุลเงิน
 					if(StatusService == 1){
-						if(TextRequest.equals("บาทเป็นดอลล่า")){
+						if(TextRequest.equals("us dollar")){
 							TextRequest = "THB,USD".toString().trim();
-						}
-						else if (TextRequest.equals("ดอลล่าเป็นบาท")){
-							TextRequest = "USD,THB".toString().trim();
+						}else if (TextRequest.equals("taiwan dollar")){
+							TextRequest = "THB,TWD".toString().trim();
+						}else if (TextRequest.equals("singapore dollar")){
+							TextRequest = "THB,SGD".toString().trim();
+						}else{
+							TextRequest = "1";
 						}
 					}
 					AsyncCallWS task = new AsyncCallWS();
@@ -190,7 +215,7 @@ public class MainActivity extends Activity {
 			super.onPreExecute();
 			pDialog = new ProgressDialog(MainActivity.this);
 			pDialog.setTitle("ติดต่อฐานข้อมูล XML");
-			pDialog.setMessage("Loading...");
+			pDialog.setMessage("กำลังค้นหา...");
 			pDialog.setIndeterminate(false);
 			pDialog.show();
 		}
@@ -215,15 +240,15 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void args) {
 			text_v.setText("");
-            if(!checkInput()){
+            if(!CheckInput()){
             	 Txt = "ไม่พบคำสั่งที่ต้องการ ลองใหม่อีกครั้ง";
             	 text_v.setText(Txt);
             	 tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
              }
 			pDialog.dismiss();
 		}
-		private boolean checkInput(){
-			boolean stu = false;
+		private boolean CheckInput(){
+			boolean Sts = false;
 			for (int temp = 0; temp < nodelist.getLength(); temp++) {
 				Node nNode = nodelist.item(temp);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -231,11 +256,10 @@ public class MainActivity extends Activity {
 					Name2 = getNode("SERVICENAME", eElement).toString();
 					
 					if(TextRequest.equals("ค้นหา")){
-					//Name2 = getNode("SERVICENAME", eElement).toString();
 					Txt = text_v.getText() + getNode("SERVICENAME", eElement)+ "\n";
-					text_v.setText (Txt);
+					text_v.setText(Txt);
 					tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
-					stu = true;
+					Sts = true;
 					}
 					
 					else if(Name2.equals(TextRequest)){
@@ -245,20 +269,22 @@ public class MainActivity extends Activity {
 					SOAP_ACTION  = getNode("SOAP_ACTION", eElement);
 					METHOD_NAME  = getNode("METHOD_NAME", eElement);
 					Att 		 = getNode("ATTIBUTE", eElement);
-					String Infor = getNode("INFORMATION", eElement);
+					Infor		 = getNode("INFORMATION", eElement);
 					Status = 1;
 					Name = Name2;
 					Txt = "เข้าสู่"+ Name2 +"\n" +Infor;
 					text_v.setText(Txt);
 					tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
-					stu = true;
+					Sts = true;
 						if(TextRequest.equals("บริการสกุลเงิน")){
 							StatusService = 1;
+						}else if(TextRequest.equals("บริการแปลงองศา")){
+							StatusService = 2;
 						}
 					}				
 				}
 			}
-			return stu;
+			return Sts;
 		}
 	}
 	private static String getNode(String sTag, Element eElement) {
@@ -294,24 +320,37 @@ public class MainActivity extends Activity {
 			tts.shutdown();
 	}
 	
-	public void getTextResponse(String TextRequest1) {
+	public void getTextResponse(String TextRequest1){
+		if(TextRequest1 != "1"){
 		SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-		String sttname[] = Att.split(",");
-		String sttValue[] = TextRequest1.split(",");
-		for(int i=0;i<sttname.length;i++){
-			request.addProperty(sttname[i],sttValue[i]);
+		String SttName[] = Att.split(",");
+		String SttValue[] = TextRequest1.split(",");
+		for(int i=0;i<SttName.length;i++){
+			request.addProperty(SttName[i],SttValue[i]);
 		}
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = true;
 		envelope.setOutputSoapObject(request);
 		HttpTransportSE androidHttpTransport = new HttpTransportSE(URL2);
-
+					
 		try {
 			androidHttpTransport.call(SOAP_ACTION, envelope);
 			SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
 			TextResponse = response.toString();
+			if(StatusService == 1){
+				TextResponse =  "อัตราการแลกเปลี่ยน " + TextRequest1 +" อยู่ที่ราคา "+ TextResponse;
+			}else if(StatusService == 2){
+				if(TextResponse.equals("Error")){
+					TextResponse = "คำสั่งไม่ถูกต้อง กรุณาพูดค่าตัวเลข";
+				}else if(TextResponse != "Error"){
+					TextResponse = TextRequest1 +" องศาเซลเซียสเท่ากับ "+TextResponse +" องศาฟาเรนไฮน์";
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		}else{
+			TextResponse = "ไม่มีคำสั่งนี้ ลองใหม่อีกครั้ง";
 		}
 	}
 }

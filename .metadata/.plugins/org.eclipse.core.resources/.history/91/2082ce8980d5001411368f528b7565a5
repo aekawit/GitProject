@@ -1,7 +1,0 @@
-package com.aeke.Project;
-
-public class Currency {
-	public void GetCurr(){
-		
-	}
-}
