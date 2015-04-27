@@ -29,6 +29,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData.Item;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,11 +58,11 @@ public class MainActivity extends Activity {
 	private int Status,StatusService = 0;
 	private String NAMESPACE,URL2,SOAP_ACTION,METHOD_NAME,Att;
 	private String Txt,Name,Name2,Infor = "";
+	TextToSpeech tts;
 	Button b;
 	NodeList nodelist;
 	TextView text_v;
 	ImageButton btnSpeak;
-	TextToSpeech tts;
 	ProgressDialog pDialog;
 	String URL = "https://cfe132ba205f9ee267410edcbcb01ddc5eeeed6d.googledrive.com/host"
 			+ "/0B1Pubw_66OGsfjdhUTJDNEJ5czNjOGF2VFJBcXQyTnJ1WVlISkpTSWNSN2drWW54N00wX1U/device2.xml";
@@ -126,20 +127,29 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//final MediaPlayer mpBtn3 = MediaPlayer.create(this, R.raw.buttonclickk);
 		int id = item.getItemId();
-		if (id == R.id.search_icon) {
-			//mpBtn3.start();
-			Txt = "สวัสดีค่ะ ยินดีต้อนรับเข้าสู่โปรแกรมสั่งงานด้วยเสียง คำสั่งการเรียกใช้งานบริการทั้งหมดมีดังต่อไปนี้ "
-					+"\n"+"ต้องการค้นหาบริการ ให้พูดว่า ค้นหา"
-					+"\n"+"ต้องการใช้งานบริการ ให้พูดชื่อบริการนั้นๆ"
-					+"\n"+"ต้องการตรวจสอบสถานะการทำงาน ให้พูดว่า สถานะ"
-					+"\n"+"ต้องการกลับเมนูหลัก ให้พูดว่า เมนูหลัก";
-			text_v.setText(Txt);
-			tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
+		if (id == R.id.search_icon){
+			help();
 			return true;
 		}
-
 		return super.onOptionsItemSelected(item);
 
+	}
+	public void help(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+		builder.setMessage("รวมคำสั่งการใช้งาน"+"\n"+": ค้นหา"+"\n"+": ชื่อบริการ"+"\n"+": สถานะ"+"\n"+": เมนูหลัก");
+		builder.setPositiveButton("เรียบร้อย", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int id) {
+		    	tts.stop();
+		    }
+		});
+		builder.show();
+		
+		Txt = 	"ต้องการค้นหาบริการ ให้พูดว่า ค้นหา"
+				+"\n"+"ต้องการใช้งานบริการ ให้พูดชื่อบริการที่ต้องการใช้"
+				+"\n"+"ต้องการตรวจสอบสถานะการทำงาน ให้พูดว่า สถานะ"
+				+"\n"+"ต้องการกลับเมนูหลัก ให้พูดว่า เมนูหลัก";
+		//text_v.setText("ค้นหา"+"\n"+"ชื่อบริการ"+"\n"+"สถานะ"+"\n"+"เมนูหลัก");
+		tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
 	}
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -169,12 +179,15 @@ public class MainActivity extends Activity {
 						tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
 					}
 				}
+				else if (TextRequest.equals("บริการ")){
+					help();
+				}
 				else if (TextRequest.equals("สถานะ")){
 					if(Status == 1){
 						Txt = "บริการที่เรียกใช้อยู่ขณะนี้คือ  "+ Name + "\n" + Infor;
 					}
 					else{
-						Txt = "ขณะนี้ยังไม่มีการเรียกใช้งานบริการ";
+						Txt = "ขณะนี้อยู่ที่ เมนูหลัก ยังไม่มีการเรียกใช้งานบริการ";
 					}
 					text_v.setText(Txt);
 					tts.speak(Txt, TextToSpeech.QUEUE_FLUSH, null);
@@ -189,6 +202,12 @@ public class MainActivity extends Activity {
 							TextRequest = "THB,SGD".toString().trim();
 						}else{
 							TextRequest = "1";
+						}
+					}else if(StatusService == 3){
+						if(TextRequest.equals("เปิด")){
+							TextRequest = "on".toString().trim();
+						}else if (TextRequest.equals("ปิด")){
+							TextRequest = "off".toString().trim();
 						}
 					}
 					AsyncCallWS task = new AsyncCallWS();
@@ -279,8 +298,14 @@ public class MainActivity extends Activity {
 						if(TextRequest.equals("บริการสกุลเงิน")){
 							StatusService = 1;
 						}else if(TextRequest.equals("บริการแปลงองศา")){
-							StatusService = 2;
+							StatusService = 2;						
+						}else if(TextRequest.equals("บริการหลอดไฟ 1")||
+								TextRequest.equals("บริการหลอดไฟ 2")||
+								TextRequest.equals("บริการหลอดไฟ 3")||
+								TextRequest.equals("บริการหลอดไฟ 4")){
+							StatusService = 3;
 						}
+						
 					}				
 				}
 			}
@@ -344,6 +369,12 @@ public class MainActivity extends Activity {
 					TextResponse = "คำสั่งไม่ถูกต้อง กรุณาพูดค่าตัวเลข";
 				}else if(TextResponse != "Error"){
 					TextResponse = TextRequest1 +" องศาเซลเซียสเท่ากับ "+TextResponse +" องศาฟาเรนไฮน์";
+				}
+			}else if(StatusService == 3){
+				if(TextResponse.equals("off")){
+					TextResponse = "ทำการ เปิด ได้สำเร็จ";
+				}else if(TextResponse.equals("on")){
+					TextResponse = "ทำการ ปิด ได้สำเร็จ";
 				}
 			}
 		} catch (Exception e) {
